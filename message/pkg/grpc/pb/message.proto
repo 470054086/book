@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package pb;
+
+
+
+//The Message service definition.
+service Message {
+ rpc SendEmailMessage (SendEmailMessageRequest) returns (SendEmailMessageReply);
+ rpc SendPhoneMessage (SendPhoneMessageRequest) returns (SendPhoneMessageReply);
+}
+
+message SendEmailMessageRequest {
+    string email=1;
+    string text = 2;
+    string content = 3;
+
+}
+message SendEmailMessageReply {
+}
+
+
+message SendPhoneMessageRequest {}
+
+message SendPhoneMessageReply {}
+
