@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "DkAWjsWMGPqKvQlWvIYzZlw4jEU=",
+			"path": "github.com/kujtimiihoxha/kit",
+			"revision": "e40b4aff8f4edbd67d4a3a2941de533f71369568",
+			"revisionTime": "2019-01-29T20:10:07Z"
+		}
+	],
+	"rootPath": "book"
+}
