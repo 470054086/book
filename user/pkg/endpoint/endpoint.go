@@ -41,7 +41,7 @@ type UserInfoByIdRequest struct {
 
 // UserInfoByIdResponse collects the response parameters for the UserInfoById method.
 type UserInfoByIdResponse struct {
-	U0 service.UserInfo `json:"u0"`
+	U0 *service.UserInfo `json:"u0"`
 	E1 error            `json:"e1"`
 }
 
@@ -52,7 +52,7 @@ func MakeUserInfoByIdEndpoint(s service.UserService) endpoint.Endpoint {
 		u0, e1 := s.UserInfoById(ctx, req.Id)
 		return UserInfoByIdResponse{
 			E1: e1,
-			U0: *u0,
+			U0: u0,
 		}, nil
 	}
 }
@@ -108,7 +108,7 @@ func (e Endpoints) Register(ctx context.Context, user service.UserInfo) (u0 serv
 }
 
 // UserInfoById implements Service. Primarily useful in a client.
-func (e Endpoints) UserInfoById(ctx context.Context, id int64) (u0 service.UserInfo, e1 error) {
+func (e Endpoints) UserInfoById(ctx context.Context, id int64) (u0 *service.UserInfo, e1 error) {
 	request := UserInfoByIdRequest{Id: id}
 	response, err := e.UserInfoByIdEndpoint(ctx, request)
 	if err != nil {

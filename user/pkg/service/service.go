@@ -40,11 +40,28 @@ func (b *basicUserService) Register(ctx context.Context, user UserInfo) (u0 *Use
 }
 func (b *basicUserService) UserInfoById(ctx context.Context, id int64) (u0 *UserInfo, e1 error) {
 	// TODO implement the business logic of UserInfoById
-	return u0, e1
+	users := make([]model.User, 0)
+	err := db.G_db.Where("id = ?",id).Find(&users)
+
+	var userInfo = &UserInfo{
+		Id :      users[0].Id,
+		Phone:    users[0].Phone,
+		Password: users[0].Password,
+		Age:      users[0].Age,
+	}
+	return userInfo, err
 }
 func (b *basicUserService) UserInfoByPhone(ctx context.Context, phone int64) (u0 *UserInfo, e1 error) {
-	// TODO implement the business logic of UserInfoByPhone
-	return u0, e1
+	users := make([]model.User, 0)
+	err := db.G_db.Where("phone = ?",phone).Find(&users)
+
+	var userInfo = &UserInfo{
+		Id :      users[0].Id,
+		Phone:    users[0].Phone,
+		Password: users[0].Password,
+		Age:      users[0].Age,
+	}
+	return userInfo, err
 }
 
 // NewBasicUserService returns a naive, stateless implementation of UserService.

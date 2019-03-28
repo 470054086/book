@@ -4,7 +4,6 @@ import (
 	"book/user/pkg/endpoint"
 	"book/user/pkg/grpc/pb"
 	"context"
-	"errors"
 	"github.com/go-kit/kit/transport/grpc"
 	context1 "golang.org/x/net/context"
 	"book/user/pkg/service"
@@ -70,14 +69,26 @@ func makeUserInfoByIdHandler(endpoints endpoint.Endpoints, options []grpc.Server
 // gRPC request to a user-domain sum request.
 // TODO implement the decoder
 func decodeUserInfoByIdRequest(_ context.Context, r interface{}) (interface{}, error) {
-	return nil, errors.New("'User' Decoder is not impelemented")
+	req := r.(*pb.UserInfoByIdRequest)
+	return endpoint.UserInfoByIdRequest{
+		Id:req.Id,
+	},nil
 }
 
 // encodeUserInfoByIdResponse is a transport/grpc.EncodeResponseFunc that converts
 // a user-domain response to a gRPC reply.
 // TODO implement the encoder
 func encodeUserInfoByIdResponse(_ context.Context, r interface{}) (interface{}, error) {
-	return nil, errors.New("'User' Encoder is not impelemented")
+	response := r.(endpoint.UserInfoByIdResponse)
+	var user = &pb.UserInfo{
+		Id:response.U0.Id,
+		Phone:response.U0.Phone,
+		Password:response.U0.Password,
+		Age:response.U0.Age,
+	}
+	return &pb.UserInfoByIdReply{
+		User:user,
+	},nil
 }
 func (g *grpcServer) UserInfoById(ctx context1.Context, req *pb.UserInfoByIdRequest) (*pb.UserInfoByIdReply, error) {
 	_, rep, err := g.userInfoById.ServeGRPC(ctx, req)
@@ -96,14 +107,26 @@ func makeUserInfoByPhoneHandler(endpoints endpoint.Endpoints, options []grpc.Ser
 // gRPC request to a user-domain sum request.
 // TODO implement the decoder
 func decodeUserInfoByPhoneRequest(_ context.Context, r interface{}) (interface{}, error) {
-	return nil, errors.New("'User' Decoder is not impelemented")
+	req := r.(*pb.UserInfoByPhoneRequest)
+	return endpoint.UserInfoByPhoneRequest{
+		Phone:req.Phone,
+	},nil
 }
 
 // encodeUserInfoByPhoneResponse is a transport/grpc.EncodeResponseFunc that converts
 // a user-domain response to a gRPC reply.
 // TODO implement the encoder
 func encodeUserInfoByPhoneResponse(_ context.Context, r interface{}) (interface{}, error) {
-	return nil, errors.New("'User' Encoder is not impelemented")
+	response := r.(endpoint.UserInfoByPhoneResponse)
+	var user = &pb.UserInfo{
+		Id:response.U0.Id,
+		Phone:response.U0.Phone,
+		Password:response.U0.Password,
+		Age:response.U0.Age,
+	}
+	return &pb.UserInfoByPhoneReply{
+		User:user,
+	},nil
 }
 func (g *grpcServer) UserInfoByPhone(ctx context1.Context, req *pb.UserInfoByPhoneRequest) (*pb.UserInfoByPhoneReply, error) {
 	_, rep, err := g.userInfoByPhone.ServeGRPC(ctx, req)
