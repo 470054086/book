@@ -4,7 +4,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"fmt"
 	"google.golang.org/grpc"
-	userpb "book/user/pkg/grpc/pb"
+	curriculum "book/curriculum/pkg/grpc/pb"
 	"context"
 )
 
@@ -17,7 +17,7 @@ type User struct {
 
 func main()  {
 	//测试rpc框架
-	conn, err := grpc.Dial("localhost:8082", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:6082", grpc.WithInsecure())
 	if(err != nil) {
 		panic(err)
 	}
@@ -27,8 +27,8 @@ func main()  {
 	//	Content: "这个是我第一封邮件啦",
 	//});
 
-	registerReply, i := userpb.NewUserClient(conn).UserInfoById(context.Background(), &userpb.UserInfoByIdRequest{
-		Id:4,
+	registerReply, i := curriculum.NewCurriculumClient(conn).Curriculum(context.Background(), &curriculum.CurriculumRequest{
+		ID:1,
 	})
 	fmt.Println(i)
 	fmt.Println(registerReply)

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package pb;
+
+
+
+//The Curriculum service definition.
+service Curriculum {
+ rpc CurriculumList (CurriculumListRequest) returns (CurriculumListReply);
+ rpc Curriculum     (CurriculumRequest    ) returns (CurriculumReply    );
+}
+
+message CurriculumInfo  {
+      int64 Id=1;
+      int64  UserId=2;
+      string Title=3;
+      string Desc=4;
+}
+
+
+message CurriculumListRequest {
+      int64 UserId = 1;
+}
+
+message CurriculumListReply {
+    repeated  CurriculumInfo info=1;
+}
+
+message CurriculumRequest {
+    int64 ID = 1;
+}
+
+message CurriculumReply {
+ CurriculumInfo info=1;
+}
+
