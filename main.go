@@ -27,8 +27,8 @@ func main()  {
 	//	Content: "这个是我第一封邮件啦",
 	//});
 
-	registerReply, i := userpb.NewUserClient(conn).UserInfoByPhone(context.Background(), &userpb.UserInfoByPhoneRequest{
-		Phone:13581922913,
+	registerReply, i := userpb.NewUserClient(conn).UserInfoById(context.Background(), &userpb.UserInfoByIdRequest{
+		Id:4,
 	})
 	fmt.Println(i)
 	fmt.Println(registerReply)

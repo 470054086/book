@@ -4,6 +4,8 @@ import (
 	"context"
 	"book/utils/db"
 	"book/model"
+	"google.golang.org/grpc"
+	messagePb  "book/message/pkg/grpc/pb"
 )
 
 type UserInfo struct {
@@ -22,7 +24,9 @@ type UserService interface {
 	UserInfoByPhone(ctx context.Context, phone int64) (*UserInfo, error)
 }
 
-type basicUserService struct{}
+type basicUserService struct{
+	messageRpcClient messagePb.MessageClient
+}
 
 func (b *basicUserService) Register(ctx context.Context, user UserInfo) (u0 *UserInfo, e1 error) {
 	// TODO implement the business logic of Register
@@ -42,13 +46,21 @@ func (b *basicUserService) UserInfoById(ctx context.Context, id int64) (u0 *User
 	// TODO implement the business logic of UserInfoById
 	users := make([]model.User, 0)
 	err := db.G_db.Where("id = ?",id).Find(&users)
-
 	var userInfo = &UserInfo{
 		Id :      users[0].Id,
 		Phone:    users[0].Phone,
 		Password: users[0].Password,
 		Age:      users[0].Age,
 	}
+	//发送邮件了哟
+	go func() {
+		b.messageRpcClient.SendEmailMessage(context.Background(),&messagePb.SendEmailMessageRequest{
+			Email:"xiaobaijun",
+			Text:"这是我通过UserInfoById函数调用的",
+			Content:"我不知道我的这次调用怎么用",
+		})
+	}()
+
 	return userInfo, err
 }
 func (b *basicUserService) UserInfoByPhone(ctx context.Context, phone int64) (u0 *UserInfo, e1 error) {
@@ -66,7 +78,18 @@ func (b *basicUserService) UserInfoByPhone(ctx context.Context, phone int64) (u0
 
 // NewBasicUserService returns a naive, stateless implementation of UserService.
 func NewBasicUserService() UserService {
-	return &basicUserService{}
+	//实例化数据库
+	db.New("mysql","root:root@/test?charset=utf8")
+	//实例化grpc的链接  这里链接到信息服务
+	conn, err := grpc.Dial("localhost:7082", grpc.WithInsecure())
+	if(err != nil) {
+		panic(err)
+	}
+	client := messagePb.NewMessageClient(conn)
+
+	return &basicUserService{
+		messageRpcClient:client,
+	}
 }
 
 // New returns a UserService with all of the expected middleware wired in.
