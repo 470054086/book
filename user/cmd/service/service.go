@@ -22,6 +22,7 @@ import (
 	appdash "sourcegraph.com/sourcegraph/appdash"
 	opentracing "sourcegraph.com/sourcegraph/appdash/opentracing"
 	"syscall"
+	"book/utils/db"
 )
 
 var tracer opentracinggo.Tracer
@@ -40,7 +41,7 @@ var thriftFramed = fs.Bool("thrift-framed", false, "true to enable framing")
 var zipkinURL = fs.String("zipkin-url", "", "Enable Zipkin tracing via a collector URL e.g. http://localhost:9411/api/v1/spans")
 var lightstepToken = fs.String("lightstep-token", "", "Enable LightStep tracing via a LightStep access token")
 var appdashAddr = fs.String("appdash-addr", "", "Enable Appdash tracing via an Appdash server host:port")
-
+var Mysql = fs.String("mysql-address","root:root@/test?charset=utf8","Mysql Address")
 func Run() {
 	fs.Parse(os.Args[1:])
 
@@ -81,6 +82,7 @@ func Run() {
 
 	svc := service.New(getServiceMiddleware(logger))
 	eps := endpoint.New(svc, getEndpointMiddleware(logger))
+	db.New("mysql",*Mysql)
 	g := createService(eps)
 	initMetricsEndpoint(g)
 	initCancelInterrupt(g)

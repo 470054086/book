@@ -6,6 +6,7 @@ import (
 	"book/model"
 	"google.golang.org/grpc"
 	messagePb  "book/message/pkg/grpc/pb"
+	"fmt"
 )
 
 type UserInfo struct {
@@ -54,6 +55,7 @@ func (b *basicUserService) UserInfoById(ctx context.Context, id int64) (u0 *User
 	}
 	//发送邮件了哟
 	go func() {
+		fmt.Println("我不知道发送了吗")
 		b.messageRpcClient.SendEmailMessage(context.Background(),&messagePb.SendEmailMessageRequest{
 			Email:"xiaobaijun",
 			Text:"这是我通过UserInfoById函数调用的",
@@ -79,9 +81,9 @@ func (b *basicUserService) UserInfoByPhone(ctx context.Context, phone int64) (u0
 // NewBasicUserService returns a naive, stateless implementation of UserService.
 func NewBasicUserService() UserService {
 	//实例化数据库
-	db.New("mysql","root:root@/test?charset=utf8")
+
 	//实例化grpc的链接  这里链接到信息服务
-	conn, err := grpc.Dial("localhost:7082", grpc.WithInsecure())
+	conn, err := grpc.Dial("message-service:7082", grpc.WithInsecure())
 	if(err != nil) {
 		panic(err)
 	}

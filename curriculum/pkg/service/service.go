@@ -57,7 +57,6 @@ func (b *basicCurriculumService) Curriculum(ctx context.Context, id int64) (c0 *
 
 // NewBasicCurriculumService returns a naive, stateless implementation of CurriculumService.
 func NewBasicCurriculumService() CurriculumService {
-	db.New("mysql","root:root@/test?charset=utf8")
 	return &basicCurriculumService{}
 }
 

@@ -23,11 +23,11 @@ import (
 	grpc1 "google.golang.org/grpc"
 	appdash "sourcegraph.com/sourcegraph/appdash"
 	opentracing "sourcegraph.com/sourcegraph/appdash/opentracing"
+	"book/utils/db"
 )
 
 var tracer opentracinggo.Tracer
 var logger log.Logger
-
 // Define our flags. Your service probably won't need to bind listeners for
 // all* supported transports, but we do it here for demonstration purposes.
 var fs = flag.NewFlagSet("curriculum", flag.ExitOnError)
@@ -41,7 +41,7 @@ var thriftFramed = fs.Bool("thrift-framed", false, "true to enable framing")
 var zipkinURL = fs.String("zipkin-url", "", "Enable Zipkin tracing via a collector URL e.g. http://localhost:9411/api/v1/spans")
 var lightstepToken = fs.String("lightstep-token", "", "Enable LightStep tracing via a LightStep access token")
 var appdashAddr = fs.String("appdash-addr", "", "Enable Appdash tracing via an Appdash server host:port")
-
+var Mysql = fs.String("mysql-address","xiaobai:123456@tcp(192.168.23.1:3306)/test?charset=utf8","Mysql Address")
 func Run() {
 	fs.Parse(os.Args[1:])
 
@@ -85,6 +85,9 @@ func Run() {
 	g := createService(eps)
 	initMetricsEndpoint(g)
 	initCancelInterrupt(g)
+
+	db.New("mysql",*Mysql)
+
 	logger.Log("exit", g.Run())
 
 }

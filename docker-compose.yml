@@ -1,0 +1,17 @@
+version: '3'
+services:
+  message-service:
+    image: message-service:latest
+  curriculum-service:
+    image: curriculum-service:latest
+  user-service:
+    image: user-service:latest
+    links:
+      - message-service:latest
+  user-api:
+    image: user-api:latest
+    links:
+      - user-service
+      - curriculum-service
+    ports:
+      - 9081:9081
